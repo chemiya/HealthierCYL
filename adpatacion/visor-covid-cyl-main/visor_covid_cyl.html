@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Visor de datos COVID de Castilla y León</title>
+        <meta charset="UTF-8" />
+        <!-- Via Internet -->
+        <script src='https://cdnjs.cloudflare.com/ajax/libs/three.js/105/three.min.js'></script>
+        <script src="https://code.jquery.com/jquery-3.6.0.slim.min.js" integrity="sha256-u7e5khyithlIdTpu22PHhENmPcRdFiHRjhAuHcs05RI=" crossorigin="anonymous"></script>
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.13.1/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+        <script src="https://code.jquery.com/ui/1.13.1/jquery-ui.js"></script>
+        <script type="text/javascript" charset="UTF-8" src="lib/TrackballControls.js"></script>
+        <script type="text/javascript" src="jquery.csv.js"></script>
+        <script type="text/javascript" src="visor_covid_cyl.js"></script>
+        <link href="estilo.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <center>
+            <h1>Visor de datos COVID de Castilla y León</h1>
+            <hr class="dotted">
+            <h2>Ante la desinformación, ¡información de verdad!</h2>
+            <hr class="rounded">
+            <div class="main">
+                <div class="controls">
+                    <center><h3>CONTROLES</h3>
+                    <p><b>Fecha: </b><input type="text" id="datepicker" value="22/02/2022"></p></center>
+                    <div class="column">
+                        <p><b>Provincias:</b></p>
+                        <p><label><input type='checkbox' id="checkAvila" checked='true'>Ávila</label></p>
+                        <p><label><input type='checkbox' id="checkBurgos" checked='true'>Burgos</label></p>
+                        <p><label><input type='checkbox' id="checkLeon" checked='true'>León</label></p>
+                        <p><label><input type='checkbox' id="checkPalencia" checked='true'>Palencia</label></p>
+                        <p><label><input type='checkbox' id="checkSalamanca" checked='true'>Salamanca</label></p>
+                        <p><label><input type='checkbox' id="checkSegovia" checked='true'>Segovia</label></p>
+                        <p><label><input type='checkbox' id="checkSoria" checked='true'>Soria</label></p>
+                        <p><label><input type='checkbox' id="checkValladolid" checked='true'>Valladolid</label></p>
+                        <p><label><input type='checkbox' id="checkZamora" checked='true'>Zamora</label></p>
+                        <p><label><input type='checkbox' id="checkCyL" checked='true'>Total CyL</label></p>
+                    </div>
+                    <div class="column">
+                        <p><b>Datos:</b></p>
+                        <p><label><input type='checkbox' id="checkHosp" checked='true'>Hospitalizados</label></p>
+                        <p><label><input type='checkbox' id="checkPos" checked='true'>Positividad</label></p>
+                        <p><label><input type='checkbox' id="checkVac" checked='true'>Vacunación</label></p>
+                    </div>
+                    
+                </div>
+                <div id="3d" class="graph3d">
+                    <h3>GRÁFICO CON INFORMACIÓN COMPLETA</h3>
+                </div>
+                <div id="2d" class="graph2d">
+                    <h3>GRÁFICO DE LOS MEDIOS</h3>
+                    <img src="grafico_medios1.jpg" class="media_graphic" width="450px">
+                </div>
+                <div class="date_container">
+                    <center><p><b>Fecha: </b> <span id="date">22/02/2022</span></p></center>
+                    <div class="color_key_container"><div class="color_key bar hosp"></div>Hospitalizados</div>
+                    <div class="color_key_container"><div class="color_key bar pos"></div>Positividad</div>
+                    <div class="color_key_container"><div class="color_key bar vac"></div>Vacunación</div>
+                    <div class="separator"></div>
+                    <div class="color_key_container"><div class="color_key red"></div><b class="title">Riesgo alto:</b> >25% hospitalizados</div>
+                    <div class="color_key_container"><div class="color_key orange"></div><b class="title">Riesgo medio:</b> 15%-25% hospitalizados</div>
+                    <div class="color_key_container"><div class="color_key green"></div><b class="title">Riesgo bajo:</b> &#60;15% hospitalizados</div>
+                </div>
+            </div>
+        </center>
+        <footer>
+            <p><b>Juan Carlos Garrote Gascón &copy;</b> - Interfaces Gráficas y Entornos Virtuales</p>
+        </footer>
+    </body>
+</html>

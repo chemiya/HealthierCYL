@@ -1,0 +1,72 @@
+
+
+    <!--graficos-->
+    <div class='container-fluid'>
+        <div class='row'>
+
+
+            <!--por centros-->
+            <div class='col-6 mt-3 mb-3'>
+                <div class='grafico'>
+                    <h1 class='text-center'>Datos por centros</h1>
+
+
+                    <!--grafico-->
+                    <div class='grafico-barras  d-flex justify-content-center align-items-center'>
+                        <div  id="barChart"></div>
+                    </div>
+
+
+                    <!--select-->
+                    <div class='selects d-flex flex-column justify-content-around align-items-center'>
+                        <select id="selectNivelAsistencialCentro" class=" form-select w-50">
+                        </select>
+
+                        <select id="selectMotivoGeneralCentro" class="mt-4 form-select w-50">
+                        </select>
+
+                        <select id="selectMesCentro" class="mt-4 form-select w-50" >
+                        </select>
+
+                        
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+            <!--por provincias-->
+            <div class='col-6 mt-3 mb-3'>
+                <div class='grafico'>
+                    <h1 class='text-center'>Datos por provincias</h1>
+
+
+                    <!--grafico-->
+                    <div id="threeCanvas"></div>
+
+
+                    <!--select-->
+                    <div class='selects d-flex flex-column justify-content-around align-items-center'>
+
+                        <select class="form-select w-50"  id="selectNivelAsistencialProvincia">
+                        </select>
+
+                        <select class="mt-4 form-select w-50" id="selectMotivoGeneralProvincia">
+                        </select>
+
+                        <select class="mt-4 form-select w-50" id="selectMesProvincia">
+                        </select>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
