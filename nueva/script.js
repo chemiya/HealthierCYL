@@ -2,18 +2,27 @@
 
 $(document).ready(function () {
 
+
+    //constantes
     let datosCentros;
     const meses = [
         'Mes', 'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
         'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     ];
-
     const nivelesAsistenciales = ['Nivel asistencial', 'Atención Especializada', 'Atención Primaria', 'Gerencias de Área', 'Otros Gerencia Regional de Salud']
-
-
     const motivosGenerales = ['Motivo general', 'Asistenciales', 'Contenido económico', 'Documentación', 'Hostelería/Confortabilidad', 'Información', 'Listas de espera/Demoras', 'Organización/ Funcionamiento', 'Trato']
 
 
+
+
+
+
+
+
+
+
+
+    ///inicializacion de selects
     var selectNivelAsistencialCentro = $('#selectNivelAsistencialCentro');
     selectNivelAsistencialCentro.empty();
     var selectNivelAsistencialProvincia = $('#selectNivelAsistencialProvincia');
@@ -49,12 +58,64 @@ $(document).ready(function () {
 
 
 
+//definicion grafico 3d de las proinvicias
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(45, 1.5, 0.1, 1000);
+    camera.position.set(20, 175, 80);
+    camera.lookAt(0, 0, 0);
+
+    const renderer = new THREE.WebGLRenderer();
+    renderer.setSize(800, 500);
+    renderer.setClearColor(new THREE.Color(0xFFFFFF));
+
+    const color = 0xFFFFFF;
+    const light = new THREE.AmbientLight(color);
+    scene.add(light);
+
+    var spotLight = new THREE.SpotLight(0xffffff);
+    spotLight.position.set(-100, 50, 75);
+    scene.add(spotLight);
+    var map;
 
 
 
+
+
+
+
+
+
+
+
+
+//carga de datos iniciales para los graficos
     consultarAPICentros("Nivel asistencial", "Motivo general", "Mes");
     consultarAPIProvincias("Nivel asistencial", "Motivo general", "Mes");
 
+
+
+    document.getElementById("threeCanvas").appendChild(renderer.domElement);
+    const controls = new THREE.TrackballControls(camera, renderer.domElement);
+    controls.rotateSpeed = 1.0;
+    controls.zoomSpeed = 1.2;
+    controls.panSpeed = 0.8;
+    controls.keys = [65, 83, 68];
+    render()
+
+
+    function render() {
+        renderer.render(scene, camera);
+
+        requestAnimationFrame(render);
+        controls.update();
+    }
+
+
+
+
+
+
+    //detectar cambio en los select
     $('#selectNivelAsistencialCentro').change(function () {
         var opcionMarcadaNivelAsistencialCentro = $('#selectNivelAsistencialCentro').val();
         var opcionMarcadaMotivoGeneralCentro = $('#selectMotivoGeneralCentro').val();
@@ -82,6 +143,7 @@ $(document).ready(function () {
         var opcionMarcadaNivelAsistencialProvincia = $('#selectNivelAsistencialProvincia').val();
         var opcionMarcadaMotivoGeneralProvincia = $('#selectMotivoGeneralProvincia').val();
         var opcionMarcadaMesProvincia = $('#selectMesProvincia').val();
+        scene.remove(map);
         consultarAPIProvincias(opcionMarcadaNivelAsistencialProvincia, opcionMarcadaMotivoGeneralProvincia, opcionMarcadaMesProvincia);
     });
 
@@ -90,6 +152,7 @@ $(document).ready(function () {
         var opcionMarcadaNivelAsistencialProvincia = $('#selectNivelAsistencialProvincia').val();
         var opcionMarcadaMotivoGeneralProvincia = $('#selectMotivoGeneralProvincia').val();
         var opcionMarcadaMesProvincia = $('#selectMesProvincia').val();
+        scene.remove(map);
         consultarAPIProvincias(opcionMarcadaNivelAsistencialProvincia, opcionMarcadaMotivoGeneralProvincia, opcionMarcadaMesProvincia);
     });
 
@@ -97,6 +160,7 @@ $(document).ready(function () {
         var opcionMarcadaNivelAsistencialProvincia = $('#selectNivelAsistencialProvincia').val();
         var opcionMarcadaMotivoGeneralProvincia = $('#selectMotivoGeneralProvincia').val();
         var opcionMarcadaMesProvincia = $('#selectMesProvincia').val();
+        scene.remove(map);
         consultarAPIProvincias(opcionMarcadaNivelAsistencialProvincia, opcionMarcadaMotivoGeneralProvincia, opcionMarcadaMesProvincia);
     });
 
@@ -105,6 +169,13 @@ $(document).ready(function () {
 
 
 
+
+
+
+
+
+
+    //funcion para obtener datos de la api sobre los centros
     function consultarAPICentros(nivelAsistencialCentro, motivoGeneralCentro, mesCentro) {
         var apiUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/reclamaciones-ambito-sanitario/records?';
         var urlCompuesta = ""
@@ -128,10 +199,6 @@ $(document).ready(function () {
         }
 
         console.log(urlCompuesta)
-
-
-
-
         axios.get(urlCompuesta)
             .then(function (response) {
                 console.log(response.data)
@@ -147,6 +214,19 @@ $(document).ready(function () {
     }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+    //funcion para obtener datos de la api sobre las provincias
     function consultarAPIProvincias(nivelAsistencialProvincia, motivoGeneralProvincia, mesProvincia) {
         var apiUrl = 'https://analisis.datosabiertos.jcyl.es/api/explore/v2.1/catalog/datasets/reclamaciones-ambito-sanitario/records?';
         var urlCompuesta = ""
@@ -170,10 +250,6 @@ $(document).ready(function () {
         }
 
         console.log(urlCompuesta)
-
-
-
-
         axios.get(urlCompuesta)
             .then(function (response) {
                 console.log(response.data)
@@ -208,19 +284,13 @@ $(document).ready(function () {
 
 
 
-    // Función para dibujar el gráfico de barras con D3.js
+    // funcion para dibujar el grafico de barras
     function drawBarChart(data,width,height) {
-
-
-
-
-        // Margenes
         const margin = { top: 100, right: 40, bottom: 320, left: 300 };
 
 
         let svg = d3.select('#barChart svg');
         if (!svg.empty()) {
-
             svg.remove();
         }
 
@@ -231,10 +301,6 @@ $(document).ready(function () {
             .append('g')
             .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
-
-
-
-        // Escalas
         const xScale = d3.scaleBand()
             .domain(data.map(d => d.centro))
             .range([0, width])
@@ -244,8 +310,6 @@ $(document).ready(function () {
             .domain([0, d3.max(data, d => d.suma)])
             .range([height, 0]);
 
-
-        // Barras
         svg.selectAll('rect')
             .data(data)
             .enter()
@@ -260,18 +324,14 @@ $(document).ready(function () {
         svg.selectAll("text")
             .data(data)
             .enter().append("text")
-            .text(function (d) { return d.suma; }) // Valor de la cantidad
-            .attr("x", function (d, i) { return i * (width / data.length) + (width / data.length - 2) / 2; }) // Posición x centrada en la barra
-            .attr("y", function (d) { return yScale(d.suma) - 5; }) // Posición y encima de la barra
+            .text(function (d) { return d.suma; }) 
+            .attr("x", function (d, i) { return i * (width / data.length) + (width / data.length - 2) / 2; }) 
+            .attr("y", function (d) { return yScale(d.suma) - 5; }) 
             .attr("text-anchor", "middle")
             .attr("font-size", "12px")
             .attr("fill", "black");
 
 
-
-
-
-        // Ejes
         const xAxis = d3.axisBottom(xScale);
         const yAxis = d3.axisLeft(yScale);
 
@@ -282,14 +342,8 @@ $(document).ready(function () {
             .attr('transform', 'rotate(-45)')
             .style('text-anchor', 'end');
 
-
-
-
         svg.append('g')
             .call(yAxis);
-
-        // Títulos
-
 
         svg.append('text')
             .attr('transform', 'rotate(-90)')
@@ -312,7 +366,18 @@ $(document).ready(function () {
 
 
 
-    // Función para dibujar el gráfico 3D con Three.js
+
+
+
+
+
+
+
+
+
+
+
+    // funcion para dibujar el grafico 3d
     function draw3DGraph(data) {
 
         if (!data) {
@@ -320,27 +385,11 @@ $(document).ready(function () {
         }
 
 
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, 1.5, 0.1, 1000);
-        camera.position.set(20, 175, 80);
-        camera.lookAt(0, 0, 0);
 
-        const renderer = new THREE.WebGLRenderer();
-        renderer.setSize(800, 500);
-        renderer.setClearColor(new THREE.Color(0xFFFFFF));
-
-        const color = 0xFFFFFF;
-        const light = new THREE.AmbientLight(color);
-        scene.add(light);
-
-        var spotLight = new THREE.SpotLight(0xffffff);
-        spotLight.position.set(-100, 50, 75);
-        scene.add(spotLight);
-
-        var map = new THREE.Object3D();
+        map = new THREE.Object3D();
         scene.add(map);
 
-        // Plano con el mapa
+        
         const mapPlaneGeometry = new THREE.PlaneGeometry(93, 74);
         const loader = new THREE.TextureLoader();
         var mapPlaneMaterial;
@@ -350,12 +399,6 @@ $(document).ready(function () {
         const mapPlaneMesh = new THREE.Mesh(mapPlaneGeometry, mapPlaneMaterial);
         mapPlaneMesh.rotation.x = -1.5708;
         map.add(mapPlaneMesh);
-
-
-
-
-
-
 
 
         var radius = 3.5;
@@ -371,16 +414,10 @@ $(document).ready(function () {
 
                 var valor = data[i].suma / 25;
 
-
-                const hospitalizations100BarGeometry = new THREE.CylinderGeometry(radius, radius, 100 / 4, 50);
-                const hospitalizations100BarMaterial = new THREE.MeshLambertMaterial({ color: 0xFF4545, opacity: 0.3, transparent: true });
-                const hospitalizations100BarMesh = new THREE.Mesh(hospitalizations100BarGeometry, hospitalizations100BarMaterial);
-                hospitalizations100BarMesh.position.y = 100 / 8;
-
-                const hospitalizationsBarGeometry = new THREE.CylinderGeometry(radius, radius, valor / 4, 50);
-                const hospitalizationsBarMaterial = new THREE.MeshLambertMaterial({ color: 0xFF4545 });
-                const hospitalizationsBarMesh = new THREE.Mesh(hospitalizationsBarGeometry, hospitalizationsBarMaterial);
-                hospitalizationsBarMesh.position.y = valor / 8;
+                const geometria = new THREE.CylinderGeometry(radius, radius, valor / 4, 50);
+                const material = new THREE.MeshLambertMaterial({ color: 0xFF4545 });
+                const mesh = new THREE.Mesh(geometria, material);
+                mesh.position.y = valor / 8;
 
                 var coordX;
                 var coordZ;
@@ -415,61 +452,22 @@ $(document).ready(function () {
                 }
 
 
-                hospitalizations100BarMesh.position.x = coordX;
-                hospitalizations100BarMesh.position.z = coordZ;
-                hospitalizationsBarMesh.position.x = coordX;
-                hospitalizationsBarMesh.position.z = coordZ;
-                map.add(hospitalizations100BarMesh);
-                map.add(hospitalizationsBarMesh);
+                mesh.position.x = coordX;
+                mesh.position.z = coordZ;
+                map.add(mesh);
             }
 
         }
-
-
-
-
-
-
-
-
-        document.getElementById("threeCanvas").appendChild(renderer.domElement);
-
-        const controls = new THREE.TrackballControls(camera, renderer.domElement);
-        controls.rotateSpeed = 1.0;
-        controls.zoomSpeed = 1.2;
-        controls.panSpeed = 0.8;
-        controls.keys = [65, 83, 68];
-
-        function render() {
-            renderer.render(scene, camera);
-
-            requestAnimationFrame(render);
-            controls.update();
-        }
-
-        render()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     }
 
 
 
 
-    draw3DGraph();
+
+
+
+    
 
 
 
