@@ -351,7 +351,7 @@ $(document).ready(function () {
             .attr('x', 0 - height / 2)
             .attr('dy', '1em')
             .style('text-anchor', 'middle')
-            .text('Cantidad reclamaciones');
+            .text('Cantidad de reclamaciones');
     }
 
 
@@ -394,7 +394,7 @@ $(document).ready(function () {
         const loader = new THREE.TextureLoader();
         var mapPlaneMaterial;
 
-        mapPlaneMaterial = new THREE.MeshBasicMaterial({ map: loader.load('cylMapa.jpg') });
+        mapPlaneMaterial = new THREE.MeshBasicMaterial({ map: loader.load('cylMapaV1.jpg') });
 
         const mapPlaneMesh = new THREE.Mesh(mapPlaneGeometry, mapPlaneMaterial);
         mapPlaneMesh.rotation.x = -1.5708;
@@ -415,7 +415,7 @@ $(document).ready(function () {
                 var valor = data[i].suma / 25;
 
                 const geometria = new THREE.CylinderGeometry(radius, radius, valor / 4, 50);
-                const material = new THREE.MeshLambertMaterial({ color: 0xFF4545 });
+                const material = new THREE.MeshLambertMaterial({ color: 0xf44611 });
                 const mesh = new THREE.Mesh(geometria, material);
                 mesh.position.y = valor / 8;
 
